@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 import { ApiHideProperty } from '@nestjs/swagger';
 
-export type CategoryDocument = Category & Document;
+export type CategoryDocument = HydratedDocument<Category>;
 @Schema({
   toJSON: {
     transform: (_doc, ret) => {

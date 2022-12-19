@@ -1,11 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import * as mongoose from 'mongoose';
-import { Factory } from 'nestjs-seeder';
 import { ApiHideProperty } from '@nestjs/swagger';
+import { HydratedDocument, Types } from 'mongoose';
+import { Factory } from 'nestjs-seeder';
 import { Role } from 'src/modules/role/entities/role.entity';
 
-export type UserDocument = User & Document;
+export type UserDocument = HydratedDocument<User>;
+
 @Schema({
   toJSON: {
     transform: (_doc, ret) => {
@@ -16,7 +16,7 @@ export type UserDocument = User & Document;
 })
 export class User {
   @ApiHideProperty()
-  _id: string;
+  _id?: string;
 
   @Factory((faker) => faker.name.fullName())
   @Prop({
@@ -30,6 +30,11 @@ export class User {
     unique: true,
   })
   email: string;
+
+  @Prop({
+    default: null,
+  })
+  emailVerifiedAt?: Date;
 
   @Factory('$2a$10$gKLiOrts6gyxa92zITbkBObiGQ8.xYrlD/EZwE6wzdHNgN61BOK8u')
   @Prop({
@@ -45,7 +50,7 @@ export class User {
   @Prop()
   bio?: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Role.name })
+  @Prop({ type: Types.ObjectId, ref: Role.name })
   role: Role;
 }
 

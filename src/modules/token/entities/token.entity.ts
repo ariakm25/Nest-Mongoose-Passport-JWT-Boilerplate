@@ -1,10 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import * as mongoose from 'mongoose';
 import { User } from '../../user/entities/user.entity';
 import { TokenType } from 'src/modules/token/token.enum';
+import { HydratedDocument, Types } from 'mongoose';
 
-export type TokenDocument = Token & Document;
+export type TokenDocument = HydratedDocument<Token>;
 
 @Schema({
   timestamps: true,
@@ -31,7 +30,7 @@ export class Token {
   })
   expires: Date;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
+  @Prop({ type: Types.ObjectId, ref: User.name })
   user: User;
 }
 

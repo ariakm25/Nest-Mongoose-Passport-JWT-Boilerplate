@@ -1,9 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import * as mongoose from 'mongoose';
 import { ApiHideProperty } from '@nestjs/swagger';
+import { HydratedDocument } from 'mongoose';
 
-export type RoleDocument = Role & Document;
+export type RoleDocument = HydratedDocument<Role>;
 
 export enum RolePermission {
   USER_CREATE = 'user:create',
@@ -36,7 +35,7 @@ export enum RolePermission {
 @Schema()
 export class Role {
   @ApiHideProperty()
-  _id: mongoose.Schema.Types.ObjectId;
+  _id?: string;
 
   @Prop({
     required: true,

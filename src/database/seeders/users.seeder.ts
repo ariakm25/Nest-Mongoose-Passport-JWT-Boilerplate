@@ -22,13 +22,14 @@ export class UsersSeeder implements Seeder {
       .generate(50)
       .map((val) => ({ ...val, role: roleUser._id }));
 
-    const usersRoleAdmin = [
+    const usersRoleAdmin: User[] = [
       {
         name: 'admin',
         email: 'admin@admin.com',
         password:
           '$2a$10$gKLiOrts6gyxa92zITbkBObiGQ8.xYrlD/EZwE6wzdHNgN61BOK8u',
         role: roleAdmin,
+        emailVerifiedAt: new Date(),
       },
       {
         name: 'admin2',
@@ -36,6 +37,7 @@ export class UsersSeeder implements Seeder {
         password:
           '$2a$10$gKLiOrts6gyxa92zITbkBObiGQ8.xYrlD/EZwE6wzdHNgN61BOK8u',
         role: roleAdmin,
+        emailVerifiedAt: new Date(),
       },
       {
         name: 'admin3',
@@ -43,6 +45,7 @@ export class UsersSeeder implements Seeder {
         password:
           '$2a$10$gKLiOrts6gyxa92zITbkBObiGQ8.xYrlD/EZwE6wzdHNgN61BOK8u',
         role: roleAdmin,
+        emailVerifiedAt: new Date(),
       },
     ];
 

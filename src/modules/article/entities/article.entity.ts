@@ -1,11 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import * as mongoose from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 import { ApiHideProperty } from '@nestjs/swagger';
 import { Category } from '../../category/entities/category.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 
-export type ArticleDocument = Article & Document;
+export type ArticleDocument = HydratedDocument<Article>;
 @Schema({
   timestamps: true,
 })
@@ -41,14 +40,14 @@ export class Article {
 
   @Prop([
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Types.ObjectId,
       ref: Category.name,
     },
   ])
   categories: Category[];
 
   @Prop({
-    type: mongoose.Schema.Types.ObjectId,
+    type: Types.ObjectId,
     ref: User.name,
   })
   author: string;
