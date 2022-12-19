@@ -17,6 +17,8 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { RolePermission } from '../role/entities/role.entity';
 import { RequirePermissions } from '../role/decorators/require-permissions.decorators';
+import { CategoryDocument } from './entities/category.entity';
+import { PaginateResult } from 'mongoose';
 
 @Controller('categories')
 @ApiTags('Category')
@@ -27,17 +29,21 @@ export class CategoryController {
   @UseGuards(PermissionsGuard)
   @RequirePermissions(RolePermission.CATEGORY_CREATE)
   @ApiBearerAuth()
-  create(@Body() createCategoryDto: CreateCategoryDto) {
+  create(
+    @Body() createCategoryDto: CreateCategoryDto,
+  ): Promise<CategoryDocument> {
     return this.categoriesService.create(createCategoryDto);
   }
 
   @Get()
-  findAll(@Query() queryCategoryDto: QueryCategoryDto) {
+  findAll(
+    @Query() queryCategoryDto: QueryCategoryDto,
+  ): Promise<PaginateResult<CategoryDocument>> {
     return this.categoriesService.findAll(queryCategoryDto);
   }
 
   @Get(':slug')
-  findOne(@Param('slug') slug: string) {
+  findOne(@Param('slug') slug: string): Promise<CategoryDocument> {
     return this.categoriesService.findOne(slug);
   }
 
@@ -48,7 +54,7 @@ export class CategoryController {
   update(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
-  ) {
+  ): Promise<CategoryDocument> {
     return this.categoriesService.updateById(id, updateCategoryDto);
   }
 
@@ -56,7 +62,7 @@ export class CategoryController {
   @UseGuards(PermissionsGuard)
   @RequirePermissions(RolePermission.CATEGORY_DELETE)
   @ApiBearerAuth()
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<CategoryDocument> {
     return this.categoriesService.remove(id);
   }
 }

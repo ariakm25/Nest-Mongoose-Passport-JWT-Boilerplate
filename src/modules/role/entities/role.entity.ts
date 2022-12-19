@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ApiHideProperty } from '@nestjs/swagger';
 import { HydratedDocument } from 'mongoose';
 
 export type RoleDocument = HydratedDocument<Role>;
@@ -34,9 +33,6 @@ export enum RolePermission {
 
 @Schema()
 export class Role {
-  @ApiHideProperty()
-  _id?: string;
-
   @Prop({
     required: true,
   })

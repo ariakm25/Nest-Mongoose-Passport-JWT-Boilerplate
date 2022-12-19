@@ -19,6 +19,7 @@ import databaseConfig from 'src/config/database.config';
 import tokenConfig from 'src/config/token.config';
 import redisConfig from 'src/config/redis.config';
 import bullboardConfig from './config/bullboard.config';
+import { PagelinkModule } from './modules/pagelink/pagelink.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import bullboardConfig from './config/bullboard.config';
     RolesModule,
     ArticleModule,
     CategoryModule,
+    PagelinkModule,
   ],
   providers: [
     {

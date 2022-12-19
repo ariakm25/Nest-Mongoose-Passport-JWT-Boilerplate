@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { User } from '../../user/entities/user.entity';
+import { User, UserDocument } from '../../user/entities/user.entity';
 import { TokenType } from 'src/modules/token/token.enum';
 import { HydratedDocument, Types } from 'mongoose';
 
@@ -31,7 +31,7 @@ export class Token {
   expires: Date;
 
   @Prop({ type: Types.ObjectId, ref: User.name })
-  user: User;
+  user: UserDocument;
 }
 
 export const TokenSchema = SchemaFactory.createForClass(Token);

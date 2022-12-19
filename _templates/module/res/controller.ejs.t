@@ -16,6 +16,8 @@ import { <%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCa
 import { Create<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto } from './dto/create-<%= h.inflection.singularize(moduleName) %>.dto';
 import { Update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto } from './dto/update-<%= h.inflection.singularize(moduleName) %>.dto';
 import { Query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto } from './dto/query-<%= h.inflection.singularize(moduleName) %>.dto';
+import { <%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document } from './entities/<%= h.inflection.singularize(moduleName) %>.entity';
+import { PaginateResult } from 'mongoose';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('<%= moduleName.toLowerCase() %>')
@@ -24,27 +26,32 @@ export class <%= h.inflection.camelize(h.inflection.singularize(moduleName.toLow
   constructor(private readonly <%= moduleName.toLowerCase() %>Service: <%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Service) {}
 
   @Post()
-  create(@Body() create<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto: Create<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto) {
+  create(@Body() create<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto: Create<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto): Promise<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document> {
     return this.<%= moduleName.toLowerCase() %>Service.create(create<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto);
   }
 
   @Get()
-  findAll(@Query() query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto: Query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto) {
+  findAll(
+    @Query() query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto: Query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto,
+  ): Promise<PaginateResult<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document>> {
     return this.<%= moduleName.toLowerCase() %>Service.findAll(query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document> {
     return this.<%= moduleName.toLowerCase() %>Service.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto: Update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto) {
+  update(
+    @Param('id') id: string,
+    @Body() update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto: Update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto,
+  ): Promise<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document> {
     return this.<%= moduleName.toLowerCase() %>Service.updateById(id, update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document> {
     return this.<%= moduleName.toLowerCase() %>Service.remove(id);
   }
 }

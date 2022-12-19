@@ -14,7 +14,7 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { RequirePermissions } from './decorators/require-permissions.decorators';
-import { RolePermission } from './entities/role.entity';
+import { RoleDocument, RolePermission } from './entities/role.entity';
 
 @Controller('roles')
 @ApiTags('Roles')
@@ -39,7 +39,7 @@ export class RolesController {
     description:
       'Create new Role with name, permissions and description. Permissions are optional',
   })
-  create(@Body() createRoleDto: CreateRoleDto) {
+  create(@Body() createRoleDto: CreateRoleDto): Promise<RoleDocument> {
     return this.rolesService.create(createRoleDto);
   }
 
@@ -51,7 +51,7 @@ export class RolesController {
     summary: 'Get Roles',
     description: 'Get all Role',
   })
-  findAll() {
+  findAll(): Promise<RoleDocument[]> {
     return this.rolesService.findAll();
   }
 
@@ -63,7 +63,7 @@ export class RolesController {
     summary: 'Detail Role',
     description: 'Detail Role',
   })
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<RoleDocument> {
     return this.rolesService.findOne(id);
   }
 
@@ -75,7 +75,10 @@ export class RolesController {
     summary: 'Update Role',
     description: 'Update Role',
   })
-  update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateRoleDto: UpdateRoleDto,
+  ): Promise<RoleDocument> {
     return this.rolesService.updateById(id, updateRoleDto);
   }
 
@@ -87,7 +90,7 @@ export class RolesController {
     summary: 'Delete Role',
     description: 'Delete Role',
   })
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<RoleDocument> {
     return this.rolesService.remove(id);
   }
 }

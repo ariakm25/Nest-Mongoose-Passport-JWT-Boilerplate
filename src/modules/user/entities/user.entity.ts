@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ApiHideProperty } from '@nestjs/swagger';
 import { HydratedDocument, Types } from 'mongoose';
 import { Factory } from 'nestjs-seeder';
 import { Role } from 'src/modules/role/entities/role.entity';
@@ -15,9 +14,6 @@ export type UserDocument = HydratedDocument<User>;
   },
 })
 export class User {
-  @ApiHideProperty()
-  _id?: string;
-
   @Factory((faker) => faker.name.fullName())
   @Prop({
     required: true,

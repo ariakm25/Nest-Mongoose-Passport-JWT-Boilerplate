@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
-import { User } from '../user/entities/user.entity';
+import { UserDocument } from '../user/entities/user.entity';
 import { Token, TokenDocument } from './entities/token.entity';
 import { InsertTokenDto } from './dto/insert-token.dto';
 import { TokenType } from 'src/modules/token/token.enum';
@@ -17,9 +17,9 @@ export class TokenService {
     @InjectModel(Token.name) private readonly tokenModel: Model<TokenDocument>,
   ) {}
 
-  createAccessToken(user: User): string {
+  createAccessToken(user: UserDocument): string {
     const payload = {
-      sub: user._id,
+      sub: user.id,
       name: user.name,
       role: user.role,
       avatar: user.avatar,
@@ -27,9 +27,9 @@ export class TokenService {
     return this.jwtService.sign(payload);
   }
 
-  async createRefreshToken(user: User): Promise<string> {
+  async createRefreshToken(user: UserDocument): Promise<string> {
     const payload = {
-      sub: user._id,
+      sub: user.id,
     };
 
     const generateRefreshToken = this.jwtService.sign(
@@ -37,7 +37,7 @@ export class TokenService {
       this.getRefreshTokenOptions(),
     );
 
-    const refreshToken = await this.insertToken({
+    const refreshToken: TokenDocument = await this.insertToken({
       type: TokenType.RefreshToken,
       user: user,
       token: generateRefreshToken,
@@ -47,7 +47,7 @@ export class TokenService {
   }
 
   async validateRefreshToken(token: string): Promise<string | boolean> {
-    const getToken = await this.tokenModel.findOne({
+    const getToken: TokenDocument = await this.tokenModel.findOne({
       token,
       type: TokenType.RefreshToken,
     });
@@ -72,7 +72,10 @@ export class TokenService {
     };
   }
 
-  async createRandomTokenForUser(user: User, type: TokenType): Promise<string> {
+  async createRandomTokenForUser(
+    user: UserDocument,
+    type: TokenType,
+  ): Promise<string> {
     const token = randomBytes(30).toString('hex');
 
     await this.insertToken({
@@ -84,7 +87,9 @@ export class TokenService {
     return token;
   }
 
-  private async insertToken(insertTokenDto: InsertTokenDto): Promise<Token> {
+  private async insertToken(
+    insertTokenDto: InsertTokenDto,
+  ): Promise<TokenDocument> {
     let expires: Date = new Date();
     switch (insertTokenDto.type) {
       case TokenType.ResetPassword:
@@ -110,8 +115,8 @@ export class TokenService {
     token: string,
     type: TokenType,
     checkExpires?: boolean,
-  ): Promise<Token> {
-    const getToken = await this.tokenModel
+  ): Promise<TokenDocument> {
+    const getToken: TokenDocument = await this.tokenModel
       .findOne({
         token,
         type,
@@ -134,7 +139,7 @@ export class TokenService {
     userId: string,
     type: TokenType,
   ): Promise<boolean> {
-    const check = await this.tokenModel.findOne({
+    const check: TokenDocument = await this.tokenModel.findOne({
       user: userId,
       type,
       createdAt: { $gte: new Date(new Date().getTime() - 1000 * 60 * 5) },

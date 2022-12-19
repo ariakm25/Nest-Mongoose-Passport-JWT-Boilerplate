@@ -11,21 +11,21 @@ export class RolesService {
     @InjectModel(Role.name) private readonly roleModel: Model<RoleDocument>,
   ) {}
 
-  async create(createRoleDto: CreateRoleDto): Promise<Role> {
+  async create(createRoleDto: CreateRoleDto): Promise<RoleDocument> {
     const role = new this.roleModel(createRoleDto);
     return await role.save();
   }
 
-  async findAll(): Promise<Role[]> {
+  async findAll(): Promise<RoleDocument[]> {
     return this.roleModel.find();
   }
 
-  async findOne(id: string): Promise<Role> {
+  async findOne(id: string): Promise<RoleDocument> {
     if (!isValidObjectId(id)) {
-      throw new NotFoundException(['_id not valid']);
+      throw new NotFoundException(['id not valid']);
     }
 
-    const data = await this.roleModel.findOne({ _id: id });
+    const data: RoleDocument = await this.roleModel.findOne({ id: id });
 
     if (!data) {
       throw new NotFoundException(['role not found']);
@@ -34,11 +34,16 @@ export class RolesService {
     return data;
   }
 
-  async updateById(id: string, updateRoleDto: UpdateRoleDto): Promise<Role> {
-    return await this.roleModel.findByIdAndUpdate(id, updateRoleDto);
+  async updateById(
+    id: string,
+    updateRoleDto: UpdateRoleDto,
+  ): Promise<RoleDocument> {
+    return await this.roleModel.findByIdAndUpdate(id, updateRoleDto, {
+      new: true,
+    });
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<RoleDocument> {
     return await this.roleModel.findByIdAndRemove(id);
   }
 

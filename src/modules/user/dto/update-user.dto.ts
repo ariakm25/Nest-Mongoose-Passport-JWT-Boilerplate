@@ -1,20 +1,21 @@
 import { IsEmail, IsOptional, MinLength } from 'class-validator';
+import { UserDocument } from '../entities/user.entity';
 
 export class UpdateUserDto {
   @IsOptional()
-  name?: string;
+  name?: UserDocument['name'];
 
   @IsEmail()
   @IsOptional()
-  email?: string;
+  email?: UserDocument['email'];
 
   @IsOptional()
   @MinLength(8)
-  password?: string;
+  password?: UserDocument['password'];
 
   @IsOptional()
-  bio?: string;
+  bio?: UserDocument['bio'];
 
   @IsOptional()
-  avatar?: string;
+  avatar?: UserDocument['avatar'];
 }

@@ -17,17 +17,19 @@ export class <%= h.inflection.camelize(h.inflection.singularize(moduleName.toLow
     private readonly <%= h.inflection.singularize(moduleName.toLowerCase()) %>Model: PaginateModel<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document>,
   ) {}
 
-  async create(create<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto: Create<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto): Promise<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>> {
+  async create(create<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto: Create<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto): Promise<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document> {
     const <%= h.inflection.singularize(moduleName) %> = new this.<%= h.inflection.singularize(moduleName.toLowerCase()) %>Model(create<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto);
     return await <%= h.inflection.singularize(moduleName) %>.save();
   }
 
-  async findAll(query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto: Query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto): Promise<PaginateResult<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>>> {
+  async findAll(
+    query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto: Query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto,
+  ): Promise<PaginateResult<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document>> {
     const query: any = {};<% schemaFields.forEach(function(schemaField) { %><% var field = schemaField.split(':')[0] %><% var type = schemaField.split(':')[1] %>
     if (query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto.<%= field %>) {
       query.<%= field %> = {
-        $regex: '.*' + query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto.<%= field %> + '.*', 
-        $options: 'i' 
+        $regex: '.*' + query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto.<%= field %> + '.*',
+        $options: 'i',
       };
     }
 <% }) %>
@@ -39,12 +41,12 @@ export class <%= h.inflection.camelize(h.inflection.singularize(moduleName.toLow
     return await this.<%= h.inflection.singularize(moduleName.toLowerCase()) %>Model.paginate(query, options);
   }
 
-  async findOne(id: string): Promise<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>> {
+  async findOne(id: string): Promise<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document> {
     if (!isValidObjectId(id)) {
       throw new NotFoundException(['invalid id']);
     }
 
-    const data = await this.<%= h.inflection.singularize(moduleName.toLowerCase()) %>Model.findOne({ _id: id });
+    const data: <%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document = await this.<%= h.inflection.singularize(moduleName.toLowerCase()) %>Model.findOne({ _id: id });
 
     if (!data) {
       throw new NotFoundException(['<%= h.inflection.singularize(moduleName) %> not found']);
@@ -52,15 +54,20 @@ export class <%= h.inflection.camelize(h.inflection.singularize(moduleName.toLow
     return data;
   }
 
-  async findOneBy(key: string, value: string): Promise<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>> {
+  async findOneBy(key: string, value: string): Promise<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document> {
     return await this.<%= h.inflection.singularize(moduleName.toLowerCase()) %>Model.findOne({ [key]: value });
   }
 
-  async updateById(id: string, update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto: Update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto): Promise<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>> {
-    return await this.<%= h.inflection.singularize(moduleName.toLowerCase()) %>Model.findByIdAndUpdate(id, update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto);
+  async updateById(
+    id: string,
+    update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto: Update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto,
+  ): Promise<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document> {
+    return await this.<%= h.inflection.singularize(moduleName.toLowerCase()) %>Model.findByIdAndUpdate(id, update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto, {
+      new: true,
+    });
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document> {
     if (!isValidObjectId(id)) {
       throw new NotFoundException(['invalid id']);
     }

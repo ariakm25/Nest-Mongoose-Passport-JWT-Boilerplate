@@ -1,6 +1,8 @@
+import { CategoryDocument } from '../entities/category.entity';
+
 export class QueryCategoryDto {
-  name?: string;
-  slug?: string;
+  name?: CategoryDocument['name'];
+  slug?: CategoryDocument['slug'];
   page?: number;
   limit?: number;
 }

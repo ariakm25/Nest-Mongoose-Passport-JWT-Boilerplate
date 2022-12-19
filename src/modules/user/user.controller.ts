@@ -17,6 +17,8 @@ import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { RequirePermissions } from '../role/decorators/require-permissions.decorators';
 import { RolePermission } from '../role/entities/role.entity';
 import { QueryUserDto } from './dto/query-user.dto';
+import { UserDocument } from './entities/user.entity';
+import { PaginateResult } from 'mongoose';
 
 @Controller('users')
 @ApiTags('Users')
@@ -27,7 +29,7 @@ export class UserController {
   @UseGuards(PermissionsGuard)
   @RequirePermissions(RolePermission.USER_CREATE)
   @ApiBearerAuth()
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Body() createUserDto: CreateUserDto): Promise<UserDocument> {
     return this.usersService.create(createUserDto);
   }
 
@@ -35,7 +37,9 @@ export class UserController {
   @UseGuards(PermissionsGuard)
   @RequirePermissions(RolePermission.USER_READ)
   @ApiBearerAuth()
-  findAll(@Query() queryUserDto: QueryUserDto) {
+  findAll(
+    @Query() queryUserDto: QueryUserDto,
+  ): Promise<PaginateResult<UserDocument>> {
     return this.usersService.findAll(queryUserDto);
   }
 
@@ -43,7 +47,7 @@ export class UserController {
   @UseGuards(PermissionsGuard)
   @RequirePermissions(RolePermission.USER_READ)
   @ApiBearerAuth()
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<UserDocument> {
     return this.usersService.findOne(id);
   }
 
@@ -51,7 +55,10 @@ export class UserController {
   @UseGuards(PermissionsGuard)
   @RequirePermissions(RolePermission.USER_UPDATE)
   @ApiBearerAuth()
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<UserDocument> {
     return this.usersService.updateById(id, updateUserDto);
   }
 
@@ -59,7 +66,7 @@ export class UserController {
   @UseGuards(PermissionsGuard)
   @RequirePermissions(RolePermission.USER_DELETE)
   @ApiBearerAuth()
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<UserDocument> {
     return this.usersService.remove(id);
   }
 }

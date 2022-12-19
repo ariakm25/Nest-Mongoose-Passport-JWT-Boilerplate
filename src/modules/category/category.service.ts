@@ -13,14 +13,16 @@ export class CategoryService {
     private readonly categoryModel: PaginateModel<CategoryDocument>,
   ) {}
 
-  async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+  async create(
+    createCategoryDto: CreateCategoryDto,
+  ): Promise<CategoryDocument> {
     const category = new this.categoryModel(createCategoryDto);
     return await category.save();
   }
 
   async findAll(
     queryCategoryDto: QueryCategoryDto,
-  ): Promise<PaginateResult<Category>> {
+  ): Promise<PaginateResult<CategoryDocument>> {
     const query: any = {};
     if (queryCategoryDto.name) {
       query.name = {
@@ -44,8 +46,8 @@ export class CategoryService {
     return await this.categoryModel.paginate(query, options);
   }
 
-  async findOne(slug: string): Promise<Category> {
-    const data = await this.categoryModel.findOne({ slug });
+  async findOne(slug: string): Promise<CategoryDocument> {
+    const data: CategoryDocument = await this.categoryModel.findOne({ slug });
 
     if (!data) {
       throw new NotFoundException(['category not found']);
@@ -53,18 +55,20 @@ export class CategoryService {
     return data;
   }
 
-  async findOneBy(key: string, value: string): Promise<Category> {
+  async findOneBy(key: string, value: string): Promise<CategoryDocument> {
     return await this.categoryModel.findOne({ [key]: value });
   }
 
   async updateById(
     id: string,
     updateCategoryDto: UpdateCategoryDto,
-  ): Promise<Category> {
-    return await this.categoryModel.findByIdAndUpdate(id, updateCategoryDto);
+  ): Promise<CategoryDocument> {
+    return await this.categoryModel.findByIdAndUpdate(id, updateCategoryDto, {
+      new: true,
+    });
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<CategoryDocument> {
     if (!isValidObjectId(id)) {
       throw new NotFoundException(['invalid id']);
     }

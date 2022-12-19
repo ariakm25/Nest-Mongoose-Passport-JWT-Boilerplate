@@ -4,15 +4,11 @@ to: src/modules/<%= h.inflection.singularize(moduleName) %>/entities/<%= h.infle
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { ApiHideProperty } from '@nestjs/swagger';
 
 export type <%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document = HydratedDocument<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>>;
 
 @Schema()
-export class <%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %> {
-  @ApiHideProperty()
-  _id?: string;
-<% schemaFields.forEach(function(schemaField) { %><% var field = schemaField.split(':')[0] %><% var type = schemaField.split(':')[1] %>
+export class <%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %> {<% schemaFields.forEach(function(schemaField) { %><% var field = schemaField.split(':')[0] %><% var type = schemaField.split(':')[1] %>
   @Prop()
   <%= field %>: <%= type %>;<% }) %>
 }

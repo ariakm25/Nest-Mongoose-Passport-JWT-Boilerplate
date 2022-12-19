@@ -1,13 +1,6 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  Req,
-  UseGuards,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Controller, Post, Body, Get, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UserDocument } from '../user/entities/user.entity';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
@@ -26,7 +19,7 @@ export class AuthController {
     description:
       'Login to get access token & refresh token by email & password',
   })
-  login(@Body() loginDto: LoginDto) {
+  login(@Body() loginDto: LoginDto): Promise<any> {
     return this.authService.login(loginDto);
   }
 
@@ -35,7 +28,7 @@ export class AuthController {
     summary: 'User Refresh Token',
     description: 'Get new access token & refresh token by refresh token',
   })
-  refresh(@Body() refreshTokenDto: RefreshTokenDto) {
+  refresh(@Body() refreshTokenDto: RefreshTokenDto): Promise<any> {
     return this.authService.refreshToken(refreshTokenDto);
   }
 
@@ -44,7 +37,7 @@ export class AuthController {
     summary: 'Reset Password',
     description: 'Get Reset Password Link from Email',
   })
-  resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+  resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<boolean> {
     return this.authService.sendResetPasswordEmail(resetPasswordDto);
   }
 
@@ -53,7 +46,9 @@ export class AuthController {
     summary: 'Update Password By Token',
     description: 'Update Password by Token from Email',
   })
-  updatePassword(@Body() updatePasswordDto: UpdatePasswordDto) {
+  updatePassword(
+    @Body() updatePasswordDto: UpdatePasswordDto,
+  ): Promise<boolean> {
     return this.authService.updatePassword(updatePasswordDto);
   }
 
@@ -64,7 +59,7 @@ export class AuthController {
     description: 'Get current authenticated user profile',
   })
   @ApiBearerAuth()
-  me(@Req() request: any) {
+  me(@Req() request: any): Promise<UserDocument> {
     return this.authService.me(request.user.id);
   }
 
@@ -75,7 +70,7 @@ export class AuthController {
   })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  logout(@Req() request: any) {
+  logout(@Req() request: any): false | Promise<boolean> {
     if (request.user) {
       return this.authService.logout(request.user.id);
     }

@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
-import { User } from '../user/entities/user.entity';
+import { UserDocument } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
 import { TokenService } from '../token/token.service';
 import bcrypt from 'bcryptjs';
@@ -13,6 +13,7 @@ import { TokenType } from 'src/modules/token/token.enum';
 import { MailService } from '../mail/mail.service';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { TokenDocument } from '../token/entities/token.entity';
 
 @Injectable()
 export class AuthService {
@@ -25,13 +26,16 @@ export class AuthService {
   async login(loginDto: LoginDto): Promise<any> {
     const { email, password } = loginDto;
 
-    const user: User = await this.usersService.findOneBy('email', email);
+    const user: UserDocument = await this.usersService.findOneBy(
+      'email',
+      email,
+    );
 
     if (user) {
       const isValid = bcrypt.compareSync(password, user.password);
       if (isValid) {
         return {
-          _id: user._id,
+          id: user.id,
           name: user.name,
           email: user.email,
           bio: user.bio,
@@ -51,7 +55,7 @@ export class AuthService {
     const verify = await this.tokenService.validateRefreshToken(refresh_token);
 
     if (typeof verify === 'string') {
-      const user: User = await this.usersService.findOne(verify);
+      const user: UserDocument = await this.usersService.findOne(verify);
 
       if (!user) {
         throw new BadRequestException(['invalid user refresh token']);
@@ -63,7 +67,7 @@ export class AuthService {
       );
 
       return {
-        _id: user._id,
+        id: user.id,
         name: user.name,
         email: user.email,
         bio: user.bio,
@@ -80,7 +84,7 @@ export class AuthService {
   async sendResetPasswordEmail(
     resetPasswordDto: ResetPasswordDto,
   ): Promise<boolean> {
-    const user: User = await this.usersService.findOneBy(
+    const user: UserDocument = await this.usersService.findOneBy(
       'email',
       resetPasswordDto.email,
     );
@@ -89,7 +93,7 @@ export class AuthService {
     }
 
     const checkToken = await this.tokenService.isTokenRecentlyAdded(
-      user._id,
+      user.id,
       TokenType.ResetPassword,
     );
 
@@ -115,7 +119,7 @@ export class AuthService {
 
   async updatePassword(updatePassword: UpdatePasswordDto): Promise<boolean> {
     const { password, token } = updatePassword;
-    const checkToken = await this.tokenService.getToken(
+    const checkToken: TokenDocument = await this.tokenService.getToken(
       token,
       TokenType.ResetPassword,
       true,
@@ -125,9 +129,9 @@ export class AuthService {
       throw new BadRequestException(['invalid token']);
     }
 
-    await this.usersService.updatePassword(checkToken.user._id, password);
+    await this.usersService.updatePassword(checkToken.user.id, password);
 
-    await this.tokenService.deleteAllUserTokens(checkToken.user._id);
+    await this.tokenService.deleteAllUserTokens(checkToken.user.id);
 
     return true;
   }
@@ -137,7 +141,7 @@ export class AuthService {
     return true;
   }
 
-  async me(id: string): Promise<User> {
+  async me(id: string): Promise<UserDocument> {
     return await this.usersService.findOne(id);
   }
 }

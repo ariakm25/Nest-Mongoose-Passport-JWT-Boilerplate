@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { ApiHideProperty } from '@nestjs/swagger';
 
 export type CategoryDocument = HydratedDocument<Category>;
 @Schema({
@@ -12,9 +11,6 @@ export type CategoryDocument = HydratedDocument<Category>;
   },
 })
 export class Category {
-  @ApiHideProperty()
-  _id: string;
-
   @Prop()
   name: string;
 

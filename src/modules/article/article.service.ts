@@ -13,6 +13,7 @@ import {
 import { SoftDeleteModel } from 'mongoose-delete';
 import { CategoryService } from '../category/category.service';
 import { RolePermission } from '../role/entities/role.entity';
+import { UserDocument } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { QueryArticleDto } from './dto/query-article.dto';
@@ -32,10 +33,9 @@ export class ArticleService {
   async create(
     createArticleDto: CreateArticleDto,
     authUser: string,
-  ): Promise<Article> {
-    const validCategories = await this.categoryService.getExistsIdOnly(
-      createArticleDto.categories,
-    );
+  ): Promise<ArticleDocument> {
+    const validCategories: string[] =
+      await this.categoryService.getExistsIdOnly(createArticleDto.categories);
     const dto = {
       ...createArticleDto,
       categories: validCategories,
@@ -48,12 +48,12 @@ export class ArticleService {
   async findAll(
     queryArticleDto: QueryArticleDto,
     authUser: string,
-  ): Promise<PaginateResult<Article>> {
+  ): Promise<PaginateResult<ArticleDocument>> {
     const query: any = {};
 
-    const user = await this.userService.findOne(authUser);
+    const user: UserDocument = await this.userService.findOne(authUser);
     if (!user.role.permissions.includes(RolePermission.ARTICLE_READ_OTHER)) {
-      query.author = user._id;
+      query.author = user.id;
     }
 
     if (queryArticleDto.title) {
@@ -106,26 +106,28 @@ export class ArticleService {
     return await this.articleModel.paginate(query, options);
   }
 
-  async findOne(id: string, authUser: string): Promise<Article> {
+  async findOne(id: string, authUser: string): Promise<ArticleDocument> {
     if (!isValidObjectId(id)) {
       throw new NotFoundException(['invalid id']);
     }
 
-    const data = await this.articleModel.findById(id).populate([
-      {
-        path: 'categories',
-      },
-      {
-        path: 'author',
-        select: ['name', 'id', 'avatar'],
-      },
-    ]);
+    const data: ArticleDocument = await this.articleModel
+      .findById(id)
+      .populate([
+        {
+          path: 'categories',
+        },
+        {
+          path: 'author',
+          select: ['name', 'id', 'avatar'],
+        },
+      ]);
 
     if (!data) {
       throw new NotFoundException(['article not found']);
     }
 
-    const user = await this.userService.findOne(authUser);
+    const user: UserDocument = await this.userService.findOne(authUser);
     if (!user.role.permissions.includes(RolePermission.ARTICLE_READ_OTHER)) {
       if (data.author.toString() !== authUser) {
         throw new UnauthorizedException([
@@ -142,21 +144,23 @@ export class ArticleService {
     value: string,
     authUser: string,
   ): Promise<Article> {
-    const data = await this.articleModel.findOne({ [key]: value }).populate([
-      {
-        path: 'categories',
-      },
-      {
-        path: 'author',
-        select: ['name', 'id', 'avatar'],
-      },
-    ]);
+    const data: ArticleDocument = await this.articleModel
+      .findOne({ [key]: value })
+      .populate([
+        {
+          path: 'categories',
+        },
+        {
+          path: 'author',
+          select: ['name', 'id', 'avatar'],
+        },
+      ]);
 
     if (!data) {
       throw new NotFoundException(['article not found']);
     }
 
-    const user = await this.userService.findOne(authUser);
+    const user: UserDocument = await this.userService.findOne(authUser);
     if (!user.role.permissions.includes(RolePermission.ARTICLE_READ_OTHER)) {
       if (data.author.toString() !== authUser) {
         throw new UnauthorizedException([
@@ -173,13 +177,13 @@ export class ArticleService {
     updateArticleDto: UpdateArticleDto,
     authUser: string,
   ): Promise<Article> {
-    const data = await this.articleModel.findById(id);
+    const data: ArticleDocument = await this.articleModel.findById(id);
 
     if (!data) {
       throw new NotFoundException(['article not found']);
     }
 
-    const user = await this.userService.findOne(authUser);
+    const user: UserDocument = await this.userService.findOne(authUser);
     if (!user.role.permissions.includes(RolePermission.ARTICLE_UPDATE_OTHER)) {
       if (data.author.toString() !== authUser) {
         throw new UnauthorizedException([
@@ -203,13 +207,13 @@ export class ArticleService {
       throw new NotFoundException(['invalid id']);
     }
 
-    const data = await this.articleModel.findById(id);
+    const data: ArticleDocument = await this.articleModel.findById(id);
 
     if (!data) {
       throw new NotFoundException(['article not found']);
     }
 
-    const user = await this.userService.findOne(authUser);
+    const user: UserDocument = await this.userService.findOne(authUser);
     if (!user.role.permissions.includes(RolePermission.ARTICLE_DELETE_OTHER)) {
       if (data.author.toString() !== authUser) {
         throw new UnauthorizedException([

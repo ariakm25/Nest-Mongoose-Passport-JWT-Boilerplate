@@ -1,19 +1,20 @@
 import { IsEmail, IsNotEmpty, MinLength, IsOptional } from 'class-validator';
+import { UserDocument } from '../entities/user.entity';
 
 export class CreateUserDto {
   @IsNotEmpty()
-  name: string;
+  name: UserDocument['name'];
 
   @IsEmail()
-  email: string;
+  email: UserDocument['email'];
 
   @IsNotEmpty()
   @MinLength(8)
-  password: string;
+  password: UserDocument['password'];
 
   @IsOptional()
-  bio?: string;
+  bio?: UserDocument['bio'];
 
   @IsOptional()
-  avatar?: string;
+  avatar?: UserDocument['avatar'];
 }

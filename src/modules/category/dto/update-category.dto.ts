@@ -1,8 +1,9 @@
 import { IsOptional } from 'class-validator';
+import { CategoryDocument } from '../entities/category.entity';
 
 export class UpdateCategoryDto {
   @IsOptional()
-  name: string;
+  name: CategoryDocument['name'];
   @IsOptional()
-  slug: string;
+  slug: CategoryDocument['slug'];
 }
