@@ -51,10 +51,10 @@ export class UsersSeeder implements Seeder {
 
     users.push(...usersRoleUsers, ...usersRoleAdmin);
 
-    return this.user.insertMany(users);
+    return await this.user.insertMany(users);
   }
 
   async drop(): Promise<any> {
-    return this.user.deleteMany({});
+    return await this.user.deleteMany({});
   }
 }

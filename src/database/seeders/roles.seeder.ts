@@ -6,7 +6,9 @@ import { Role, RolePermission } from 'src/modules/role/entities/role.entity';
 
 @Injectable()
 export class RolesSeeder implements Seeder {
-  constructor(@InjectModel(Role.name) private readonly role: Model<Role>) {}
+  constructor(
+    @InjectModel(Role.name) private readonly roleModel: Model<Role>,
+  ) {}
 
   async seed(): Promise<any> {
     const allPermissions = Object.values(RolePermission);
@@ -23,10 +25,10 @@ export class RolesSeeder implements Seeder {
       },
     ];
 
-    return this.role.insertMany(roles);
+    return await this.roleModel.insertMany(roles);
   }
 
   async drop(): Promise<any> {
-    return this.role.deleteMany({});
+    return await this.roleModel.deleteMany({});
   }
 }
