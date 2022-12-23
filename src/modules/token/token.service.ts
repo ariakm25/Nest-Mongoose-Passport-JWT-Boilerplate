@@ -153,7 +153,7 @@ export class TokenService {
   }
 
   async deleteAllUserTokens(userId: string, type?: TokenType): Promise<any> {
-    let query: any = { user: userId };
+    let query: any = { user: new Types.ObjectId(userId) };
     if (type) {
       query = { ...query, type };
     }
