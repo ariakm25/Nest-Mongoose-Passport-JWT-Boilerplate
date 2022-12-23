@@ -34,7 +34,7 @@ import path from 'path';
           )}" <${configService.get<string>('mail.senderEmail')}>`,
         },
         template: {
-          dir: path.join(__dirname, '/../../../modules/mail/templates'),
+          dir: path.join(__dirname, '/../../modules/mail/templates'),
           adapter: new EjsAdapter(),
           options: {
             strict: true,
