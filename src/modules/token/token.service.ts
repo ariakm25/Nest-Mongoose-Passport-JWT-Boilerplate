@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { UserDocument } from '../user/entities/user.entity';
@@ -140,7 +140,7 @@ export class TokenService {
     type: TokenType,
   ): Promise<boolean> {
     const check: TokenDocument = await this.tokenModel.findOne({
-      user: userId,
+      user: new Types.ObjectId(userId),
       type,
       createdAt: { $gte: new Date(new Date().getTime() - 1000 * 60 * 5) },
     });
