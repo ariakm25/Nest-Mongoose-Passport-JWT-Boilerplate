@@ -58,10 +58,9 @@ export class MailProcessor {
           expiration: this.configService.get(
             'token.resetPasswordTokenExpiration',
           ),
-          url:
-            this.configService.get('app.appUrl') +
-            '/reset-password?token=' +
-            job.data.token,
+          url: `${this.configService.get(
+            'app.frontendUrl',
+          )}/update-password?token=${job.data.token}&email=${job.data.email}`,
         },
       });
       return result;
