@@ -18,9 +18,9 @@ export class UsersSeeder implements Seeder {
     const roleAdmin = await this.role.findOne({ name: 'admin' });
     const roleUser = await this.role.findOne({ name: 'user' });
 
-    const usersRoleUsers = DataFactory.createForClass(User)
+    const usersRoleUsersGenerated = DataFactory.createForClass(User)
       .generate(50)
-      .map((val) => ({ ...val, role: roleUser._id }));
+      .map((val) => ({ ...val, role: roleUser }));
 
     const usersRoleAdmin: User[] = [
       {
@@ -49,7 +49,38 @@ export class UsersSeeder implements Seeder {
       },
     ];
 
-    users.push(...usersRoleUsers, ...usersRoleAdmin);
+    const usersRoleUsers: User[] = [
+      {
+        name: 'user',
+        email: 'user@user.com',
+        password:
+          '$2a$10$gKLiOrts6gyxa92zITbkBObiGQ8.xYrlD/EZwE6wzdHNgN61BOK8u',
+        role: roleUser,
+        emailVerifiedAt: new Date(),
+      },
+      {
+        name: 'user2',
+        email: 'user2@user.com',
+        password:
+          '$2a$10$gKLiOrts6gyxa92zITbkBObiGQ8.xYrlD/EZwE6wzdHNgN61BOK8u',
+        role: roleUser,
+        emailVerifiedAt: new Date(),
+      },
+      {
+        name: 'user3',
+        email: 'user3@user.com',
+        password:
+          '$2a$10$gKLiOrts6gyxa92zITbkBObiGQ8.xYrlD/EZwE6wzdHNgN61BOK8u',
+        role: roleUser,
+        emailVerifiedAt: new Date(),
+      },
+    ];
+
+    users.push(
+      ...usersRoleAdmin,
+      ...usersRoleUsers,
+      ...usersRoleUsersGenerated,
+    );
 
     return await this.user.insertMany(users);
   }
