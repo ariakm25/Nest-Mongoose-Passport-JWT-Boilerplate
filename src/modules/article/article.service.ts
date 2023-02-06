@@ -88,7 +88,7 @@ export class ArticleService {
         'updatedAt',
       ],
       page: queryArticleDto.page || 1,
-      limit: queryArticleDto.limit <= 24 ? queryArticleDto.limit : 24,
+      limit: queryArticleDto.limit <= 120 ? queryArticleDto.limit : 24,
       populate: [
         {
           path: 'categories',

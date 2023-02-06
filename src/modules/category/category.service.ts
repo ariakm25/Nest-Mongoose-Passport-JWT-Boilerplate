@@ -40,7 +40,7 @@ export class CategoryService {
 
     const options = {
       page: queryCategoryDto.page || 1,
-      limit: queryCategoryDto.limit <= 24 ? queryCategoryDto.limit : 24,
+      limit: queryCategoryDto.limit <= 120 ? queryCategoryDto.limit : 24,
     };
 
     return await this.categoryModel.paginate(query, options);

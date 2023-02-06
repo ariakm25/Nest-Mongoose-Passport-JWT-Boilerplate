@@ -23,12 +23,12 @@ seeder({
     }),
     MongooseModule.forFeature([
       {
-        name: User.name,
-        schema: UserSchema,
-      },
-      {
         name: Role.name,
         schema: RoleSchema,
+      },
+      {
+        name: User.name,
+        schema: UserSchema,
       },
     ]),
   ],

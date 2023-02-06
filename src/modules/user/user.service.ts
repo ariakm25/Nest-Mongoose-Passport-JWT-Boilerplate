@@ -44,7 +44,7 @@ export class UserService {
 
     const options = {
       page: queryUserDto.page || 1,
-      limit: queryUserDto.limit <= 24 ? queryUserDto.limit : 24,
+      limit: queryUserDto.limit <= 120 ? queryUserDto.limit : 24,
       populate: 'role',
     };
 
