@@ -34,9 +34,7 @@ abstract class ExistsValidator implements ValidatorConstraintInterface {
   }
 
   public defaultMessage(args: ValidationArguments) {
-    const [Model] = args.constraints;
-    const entity = Model.name || 'Entity';
-    return `${entity} with '${args.property}': ${args.value} doesn't exist`;
+    return `'${args.property}' ${args.value} doesn't exist`;
   }
 }
 

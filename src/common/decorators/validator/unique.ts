@@ -49,9 +49,7 @@ abstract class UniqueValidator implements ValidatorConstraintInterface {
   }
 
   public defaultMessage(args: ValidationArguments) {
-    const [Model] = args.constraints;
-    const entity = Model.name || 'Entity';
-    return `${entity} with the same '${args.property}' already exist`;
+    return `${args.property} already exist`;
   }
 }
 
