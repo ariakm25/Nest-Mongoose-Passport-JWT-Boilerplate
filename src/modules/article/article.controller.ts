@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   Query,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
@@ -18,6 +17,8 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { RequirePermissions } from '../role/decorators/require-permissions.decorators';
 import { RolePermission } from '../role/entities/role.entity';
+import { AuthState } from '../auth/entity/auth.entity';
+import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('articles')
 @ApiTags('Article')
@@ -28,39 +29,35 @@ export class ArticleController {
   @UseGuards(PermissionsGuard)
   @RequirePermissions(RolePermission.ARTICLE_CREATE)
   @ApiBearerAuth()
-  create(@Body() createArticleDto: CreateArticleDto, @Req() request: any) {
-    return this.articlesService.create(createArticleDto, request.user.id);
+  create(@Body() createArticleDto: CreateArticleDto, @User() user: AuthState) {
+    return this.articlesService.create(createArticleDto, user.id);
   }
 
   @Get()
   @UseGuards(PermissionsGuard)
   @RequirePermissions(RolePermission.ARTICLE_READ)
   @ApiBearerAuth()
-  findAll(@Query() queryArticleDto: QueryArticleDto, @Req() request: any) {
-    return this.articlesService.findAll(queryArticleDto, request.user.id);
+  findAll(@Query() queryArticleDto: QueryArticleDto, @User() user: AuthState) {
+    return this.articlesService.findAll(queryArticleDto, user.id);
   }
 
   @Get(':id')
   @UseGuards(PermissionsGuard)
   @RequirePermissions(RolePermission.ARTICLE_READ)
   @ApiBearerAuth()
-  findOne(@Param('id') id: string, @Req() request: any) {
-    return this.articlesService.findOne(id, request.user.id);
+  findOne(@Param('id') id: string, @User() user: AuthState) {
+    return this.articlesService.findOne(id, user.id);
   }
 
-  @Patch(':id')
+  @Patch()
   @UseGuards(PermissionsGuard)
   @RequirePermissions(RolePermission.ARTICLE_UPDATE)
   @ApiBearerAuth()
-  update(
-    @Param('id') id: string,
-    @Body() updateArticleDto: UpdateArticleDto,
-    @Req() request: any,
-  ) {
+  update(@Body() updateArticleDto: UpdateArticleDto, @User() user: AuthState) {
     return this.articlesService.updateById(
-      id,
+      updateArticleDto.id,
       updateArticleDto,
-      request.user.id,
+      user.id,
     );
   }
 
@@ -68,7 +65,7 @@ export class ArticleController {
   @UseGuards(PermissionsGuard)
   @RequirePermissions(RolePermission.ARTICLE_DELETE)
   @ApiBearerAuth()
-  remove(@Param('id') id: string, @Req() request: any) {
-    return this.articlesService.remove(id, request.user.id);
+  remove(@Param('id') id: string, @User() user: AuthState) {
+    return this.articlesService.remove(id, user.id);
   }
 }

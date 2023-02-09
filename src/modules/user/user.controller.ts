@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Query,
+  ForbiddenException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,6 +20,8 @@ import { RolePermission } from '../role/entities/role.entity';
 import { QueryUserDto } from './dto/query-user.dto';
 import { UserDocument } from './entities/user.entity';
 import { PaginateResult } from 'mongoose';
+import { User } from 'src/common/decorators/user.decorator';
+import { AuthState } from '../auth/entity/auth.entity';
 
 @Controller('users')
 @ApiTags('Users')
@@ -51,22 +54,25 @@ export class UserController {
     return this.usersService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch()
   @UseGuards(PermissionsGuard)
   @RequirePermissions(RolePermission.USER_UPDATE)
   @ApiBearerAuth()
-  update(
-    @Param('id') id: string,
-    @Body() updateUserDto: UpdateUserDto,
-  ): Promise<UserDocument> {
-    return this.usersService.updateById(id, updateUserDto);
+  update(@Body() updateUserDto: UpdateUserDto): Promise<UserDocument> {
+    return this.usersService.updateById(updateUserDto.id, updateUserDto);
   }
 
   @Delete(':id')
   @UseGuards(PermissionsGuard)
   @RequirePermissions(RolePermission.USER_DELETE)
   @ApiBearerAuth()
-  remove(@Param('id') id: string): Promise<UserDocument> {
+  remove(
+    @Param('id') id: string,
+    @User() user: AuthState,
+  ): Promise<UserDocument> {
+    if (user.id === id) {
+      throw new ForbiddenException(['You cannot delete yourself']);
+    }
     return this.usersService.remove(id);
   }
 }

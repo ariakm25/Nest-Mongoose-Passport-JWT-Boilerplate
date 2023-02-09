@@ -37,17 +37,16 @@ export class <%= h.inflection.camelize(h.inflection.singularize(moduleName.toLow
     return this.<%= moduleName.toLowerCase() %>Service.findAll(query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto);
   }
 
+  @Patch()
+  update(
+    @Body() update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto: Update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto,
+  ): Promise<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document> {
+    return this.<%= moduleName.toLowerCase() %>Service.updateById(update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto.id, update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string): Promise<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document> {
     return this.<%= moduleName.toLowerCase() %>Service.findOne(id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto: Update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto,
-  ): Promise<<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Document> {
-    return this.<%= moduleName.toLowerCase() %>Service.updateById(id, update<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto);
   }
 
   @Delete(':id')

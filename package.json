@@ -21,7 +21,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "seed": "node dist/database/seeders/seeder",
     "seed:refresh": "node dist/database/seeders/seeder --refresh",
-    "gen:module": "hygen module res"
+    "gen:module": "hygen module res",
+    "repl": "npm run start:dev -- --entryFile repl",
+    "prod:repl": "npm run start -- --entryFile repl"
   },
   "dependencies": {
     "@bull-board/api": "^4.9.0",

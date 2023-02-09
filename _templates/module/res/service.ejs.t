@@ -35,7 +35,7 @@ export class <%= h.inflection.camelize(h.inflection.singularize(moduleName.toLow
 <% }) %>
     const options = {
       page: query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto.page || 1,
-      limit: query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto.limit <= 120 ? query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto.limit : 24,
+      limit: query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto.limit <= 24 ? query<%= h.inflection.camelize(h.inflection.singularize(moduleName.toLowerCase())) %>Dto.limit : 24,
     };
 
     return await this.<%= h.inflection.singularize(moduleName.toLowerCase()) %>Model.paginate(query, options);

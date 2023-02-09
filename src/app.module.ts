@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { TokenModule } from './modules/token/token.module';
@@ -12,7 +11,6 @@ import { ArticleModule } from './modules/article/article.module';
 import { CategoryModule } from './modules/category/category.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import mongooseSlugUpdater from 'mongoose-slug-updater';
 import mailConfig from 'src/config/mail.config';
 import appConfig from 'src/config/app.config';
 import databaseConfig from 'src/config/database.config';
@@ -20,6 +18,7 @@ import tokenConfig from 'src/config/token.config';
 import redisConfig from 'src/config/redis.config';
 import bullboardConfig from './config/bullboard.config';
 import { PagelinkModule } from './modules/pagelink/pagelink.module';
+import { DatabaseModule } from './modules/database/database.module';
 
 @Module({
   imports: [
@@ -34,18 +33,7 @@ import { PagelinkModule } from './modules/pagelink/pagelink.module';
       ],
       cache: true,
     }),
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        uri: configService.get<string>('database.url'),
-        useNewUrlParser: true,
-        connectionFactory: (connection) => {
-          connection.plugin(mongooseSlugUpdater);
-          return connection;
-        },
-      }),
-    }),
+    DatabaseModule,
     BullModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

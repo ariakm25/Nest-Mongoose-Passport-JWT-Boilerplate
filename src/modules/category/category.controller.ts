@@ -47,15 +47,17 @@ export class CategoryController {
     return this.categoriesService.findOne(slug);
   }
 
-  @Patch(':id')
+  @Patch()
   @UseGuards(PermissionsGuard)
   @RequirePermissions(RolePermission.CATEGORY_UPDATE)
   @ApiBearerAuth()
   update(
-    @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ): Promise<CategoryDocument> {
-    return this.categoriesService.updateById(id, updateCategoryDto);
+    return this.categoriesService.updateById(
+      updateCategoryDto.id,
+      updateCategoryDto,
+    );
   }
 
   @Delete(':id')

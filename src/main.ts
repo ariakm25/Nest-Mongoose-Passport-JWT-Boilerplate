@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import compression from 'compression';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -37,6 +38,7 @@ async function bootstrap() {
     }),
   );
   app.useGlobalInterceptors(new TransformInterceptor());
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   await app.listen(configService.get<string>('PORT'), async () =>
     console.log(`Server running on ${await app.getUrl()}`),

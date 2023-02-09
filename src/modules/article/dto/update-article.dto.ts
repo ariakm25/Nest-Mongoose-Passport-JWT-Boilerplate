@@ -1,6 +1,9 @@
-import { IsEnum, IsOptional } from 'class-validator';
+import { IsDefined, IsEnum, IsOptional } from 'class-validator';
 
 export class UpdateArticleDto {
+  @IsDefined()
+  id: string;
+
   @IsOptional()
   title: string;
 

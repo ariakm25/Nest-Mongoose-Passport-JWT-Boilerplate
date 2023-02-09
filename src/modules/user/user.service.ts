@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { PaginateModel, PaginateResult, isValidObjectId } from 'mongoose';
 import { TokenService } from '../token/token.service';
@@ -21,7 +17,6 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto): Promise<UserDocument> {
     const user = new this.userModel(createUserDto);
-    await this.isEmailUnique(user.email);
     return await user.save();
   }
 
@@ -38,8 +33,8 @@ export class UserService {
       query.email = { $regex: '.*' + queryUserDto.email + '.*', $options: 'i' };
     }
 
-    if (queryUserDto.role) {
-      query.role = queryUserDto.role;
+    if (queryUserDto.roleId) {
+      query.roleId = queryUserDto.roleId;
     }
 
     const options = {
@@ -101,17 +96,5 @@ export class UserService {
       throw new NotFoundException(['invalid id']);
     }
     return await this.userModel.findByIdAndRemove(id);
-  }
-
-  private async isEmailUnique(email: string): Promise<boolean> {
-    const user: UserDocument = await this.userModel.findOne({
-      email,
-      verified: true,
-    });
-    if (user) {
-      throw new BadRequestException(['email already taken']);
-    }
-
-    return true;
   }
 }
