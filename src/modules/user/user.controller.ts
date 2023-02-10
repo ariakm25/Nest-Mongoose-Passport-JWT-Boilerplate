@@ -22,6 +22,7 @@ import { UserDocument } from './entities/user.entity';
 import { PaginateResult } from 'mongoose';
 import { User } from 'src/common/decorators/user.decorator';
 import { AuthState } from '../auth/entity/auth.entity';
+import { UpdatePasswordUserDto } from './dto/update-password-user.dto';
 
 @Controller('users')
 @ApiTags('Users')
@@ -60,6 +61,19 @@ export class UserController {
   @ApiBearerAuth()
   update(@Body() updateUserDto: UpdateUserDto): Promise<UserDocument> {
     return this.usersService.updateById(updateUserDto.id, updateUserDto);
+  }
+
+  @Patch('password')
+  @UseGuards(PermissionsGuard)
+  @RequirePermissions(RolePermission.USER_UPDATE)
+  @ApiBearerAuth()
+  updatePassword(
+    @Body() updatePasswordUserDto: UpdatePasswordUserDto,
+  ): Promise<UserDocument> {
+    return this.usersService.updatePassword(
+      updatePasswordUserDto.id,
+      updatePasswordUserDto.password,
+    );
   }
 
   @Delete(':id')

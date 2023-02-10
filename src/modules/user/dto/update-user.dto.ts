@@ -1,10 +1,4 @@
-import {
-  IsDefined,
-  IsEmail,
-  IsOptional,
-  MinLength,
-  Validate,
-} from 'class-validator';
+import { IsDefined, IsEmail, IsOptional, Validate } from 'class-validator';
 import { Unique } from 'src/common/decorators/validator/unique';
 import { User, UserDocument } from '../entities/user.entity';
 
@@ -21,12 +15,11 @@ export class UpdateUserDto {
   email?: UserDocument['email'];
 
   @IsOptional()
-  @MinLength(8)
-  password?: UserDocument['password'];
-
-  @IsOptional()
   bio?: UserDocument['bio'];
 
   @IsOptional()
   avatar?: UserDocument['avatar'];
+
+  @IsOptional()
+  roleId?: string;
 }
