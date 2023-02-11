@@ -1,5 +1,7 @@
 import { IsDefined, IsEmail, IsOptional, Validate } from 'class-validator';
+import { Exists } from 'src/common/decorators/validator/exists';
 import { Unique } from 'src/common/decorators/validator/unique';
+import { Role } from 'src/modules/role/entities/role.entity';
 import { User, UserDocument } from '../entities/user.entity';
 
 export class UpdateUserDto {
@@ -21,5 +23,6 @@ export class UpdateUserDto {
   avatar?: UserDocument['avatar'];
 
   @IsOptional()
+  @Validate(Exists, [Role, '_id'])
   roleId?: string;
 }

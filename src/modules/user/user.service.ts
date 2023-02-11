@@ -16,7 +16,11 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserDocument> {
-    const user = new this.userModel(createUserDto);
+    const user = new this.userModel({
+      ...createUserDto,
+      role: createUserDto.roleId,
+    });
+
     return await user.save();
   }
 
@@ -70,9 +74,13 @@ export class UserService {
     updateUserDto: UpdateUserDto,
   ): Promise<UserDocument> {
     return await this.userModel
-      .findByIdAndUpdate(id, updateUserDto, {
-        new: true,
-      })
+      .findByIdAndUpdate(
+        id,
+        { ...updateUserDto, role: updateUserDto.roleId },
+        {
+          new: true,
+        },
+      )
       .populate('role');
   }
 

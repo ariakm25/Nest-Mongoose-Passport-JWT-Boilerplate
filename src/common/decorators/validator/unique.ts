@@ -5,7 +5,14 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { Connection, Document, FilterQuery, Model, Types } from 'mongoose';
+import {
+  Connection,
+  Document,
+  FilterQuery,
+  isValidObjectId,
+  Model,
+  Types,
+} from 'mongoose';
 
 interface UniqueValidationArguments<D> extends ValidationArguments {
   constraints: [
@@ -37,6 +44,9 @@ abstract class UniqueValidator implements ValidatorConstraintInterface {
       let relatedValue = (args.object as any)[exceptValue];
 
       if (exceptField === '_id') {
+        if (!isValidObjectId(relatedValue)) {
+          return false;
+        }
         relatedValue = new Types.ObjectId(relatedValue);
       }
 

@@ -25,4 +25,7 @@ export class CreateUserDto {
 
   @IsOptional()
   avatar?: UserDocument['avatar'];
+
+  @IsNotEmpty()
+  roleId?: string;
 }

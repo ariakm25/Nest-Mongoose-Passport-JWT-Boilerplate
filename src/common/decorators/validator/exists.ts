@@ -5,7 +5,13 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { Connection, Document, FilterQuery, Model } from 'mongoose';
+import {
+  Connection,
+  Document,
+  FilterQuery,
+  isValidObjectId,
+  Model,
+} from 'mongoose';
 
 interface ExistsValidationArguments<D> extends ValidationArguments {
   constraints: [
@@ -22,15 +28,21 @@ abstract class ExistsValidator implements ValidatorConstraintInterface {
 
   public async validate<E>(value: string, args: ExistsValidationArguments<E>) {
     const [Model, findCondition = args.property] = args.constraints;
-    return (
-      (await this.connection.model(Model.name).count(
-        typeof findCondition === 'function'
-          ? findCondition(args)
-          : {
-              [findCondition || args.property]: value,
-            },
-      )) > 0
-    );
+
+    if (findCondition === '_id') {
+      if (!isValidObjectId(value)) {
+        return false;
+      }
+    }
+
+    const filterQuery =
+      typeof findCondition === 'function'
+        ? findCondition(args)
+        : {
+            [findCondition || args.property]: value,
+          };
+
+    return (await this.connection.model(Model.name).count(filterQuery)) > 0;
   }
 
   public defaultMessage(args: ValidationArguments) {
