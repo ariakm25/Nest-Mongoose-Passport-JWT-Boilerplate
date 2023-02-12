@@ -36,3 +36,8 @@ lerna-debug.log*
 
 # ENV
 .env
+
+# lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
