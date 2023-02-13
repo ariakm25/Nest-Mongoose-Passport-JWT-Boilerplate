@@ -1,7 +1,7 @@
 import {
   Injectable,
   NotFoundException,
-  UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {
@@ -130,7 +130,7 @@ export class ArticleService {
     const user: UserDocument = await this.userService.findOne(authUser);
     if (!user.role.permissions.includes(RolePermission.ARTICLE_READ_OTHER)) {
       if (data.author.toString() !== authUser) {
-        throw new UnauthorizedException([
+        throw new ForbiddenException([
           'you are not allowed to read this article',
         ]);
       }
@@ -163,7 +163,7 @@ export class ArticleService {
     const user: UserDocument = await this.userService.findOne(authUser);
     if (!user.role.permissions.includes(RolePermission.ARTICLE_READ_OTHER)) {
       if (data.author.toString() !== authUser) {
-        throw new UnauthorizedException([
+        throw new ForbiddenException([
           'you are not allowed to read this article',
         ]);
       }
@@ -186,7 +186,7 @@ export class ArticleService {
     const user: UserDocument = await this.userService.findOne(authUser);
     if (!user.role.permissions.includes(RolePermission.ARTICLE_UPDATE_OTHER)) {
       if (data.author.toString() !== authUser) {
-        throw new UnauthorizedException([
+        throw new ForbiddenException([
           'you are not allowed to update this article',
         ]);
       }
@@ -216,7 +216,7 @@ export class ArticleService {
     const user: UserDocument = await this.userService.findOne(authUser);
     if (!user.role.permissions.includes(RolePermission.ARTICLE_DELETE_OTHER)) {
       if (data.author.toString() !== authUser) {
-        throw new UnauthorizedException([
+        throw new ForbiddenException([
           'you are not allowed to delete this article',
         ]);
       }
