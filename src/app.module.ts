@@ -17,7 +17,6 @@ import databaseConfig from 'src/config/database.config';
 import tokenConfig from 'src/config/token.config';
 import redisConfig from 'src/config/redis.config';
 import bullboardConfig from './config/bullboard.config';
-import { PagelinkModule } from './modules/pagelink/pagelink.module';
 import { DatabaseModule } from './modules/database/database.module';
 
 @Module({
@@ -56,7 +55,6 @@ import { DatabaseModule } from './modules/database/database.module';
     RolesModule,
     ArticleModule,
     CategoryModule,
-    PagelinkModule,
   ],
   providers: [
     {
