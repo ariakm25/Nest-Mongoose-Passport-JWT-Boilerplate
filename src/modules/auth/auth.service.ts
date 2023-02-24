@@ -89,7 +89,7 @@ export class AuthService {
       resetPasswordDto.email,
     );
     if (!user) {
-      return false;
+      throw new BadRequestException(['user not found']);
     }
 
     const checkToken = await this.tokenService.isTokenRecentlyAdded(
