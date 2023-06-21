@@ -7,6 +7,8 @@ import {
 } from 'class-validator';
 import { Unique } from 'src/common/decorators/validator/unique';
 import { User, UserDocument } from '../entities/user.entity';
+import { Exists } from "../../../common/decorators/validator/exists";
+import { Role } from "../../role/entities/role.entity";
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -27,5 +29,6 @@ export class CreateUserDto {
   avatar?: UserDocument['avatar'];
 
   @IsNotEmpty()
+  @Validate(Exists, [Role, '_id'])
   roleId?: string;
 }
